@@ -1,8 +1,8 @@
 import orderModel from "../models/orderModel.js";
 import userModel from "../models/userModel.js";
 import razorpay from "razorpay";
-import nodemailer from "nodemailer";
 import dotenv from "dotenv";
+import { sendMail as deliverMail } from "../utils/mailer.js";
 
 dotenv.config();
 
@@ -13,24 +13,9 @@ const razorpayInstance = new razorpay({
   key_secret: process.env.RAZORPAY_KEY_SECRET
 });
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
-});
-
 const sendMail = async (to, subject, text) => {
-  const mailOptions = {
-    from: process.env.EMAIL_USER,
-    to,
-    subject,
-    text
-  };
-
   try {
-    const info = await transporter.sendMail(mailOptions);
+    const info = await deliverMail(to, subject, text);
     console.log(`✅ Email sent to ${to}: ${info.response}`);
   } catch (error) {
     console.error(`❌ Failed to send email to ${to}:`, error);
@@ -100,7 +85,7 @@ ${address.street}, ${address.city}, ${address.state}, ${address.country} - ${add
 Check your admin dashboard for full details.
 `;
 
-    await sendMail(process.env.EMAIL_USER, "📥 New Order Received - Vanya Ecoproducts", adminText);
+    await sendMail(process.env.ADMIN_EMAIL, "📥 New Order Received - Vanya Ecoproducts", adminText);
 
     res.status(200).json({ success: true, message: "Order placed successfully" });
   } catch (error) {
@@ -199,7 +184,7 @@ ${address.firstName} ${address.lastName}
 ${address.street}, ${address.city}, ${address.state}, ${address.country} - ${address.zipcode}
 `;
 
-      await sendMail(process.env.EMAIL_USER, "📥 Paid Order - Vanya Ecoproducts", adminText);
+      await sendMail(process.env.ADMIN_EMAIL, "📥 Paid Order - Vanya Ecoproducts", adminText);
 
       res.json({ success: true, message: "✅ Payment Successful" });
     } else {

@@ -13,14 +13,12 @@ import invoiceRouter from './routes/invoiceRoute.js';
 // App config
 const app = express();
 const port = process.env.PORT || 4000;
-connectDB();
+
 connectCloudinary();
 
 // Middlewares
 app.use(express.json());
 app.use(cors());
-
-
 
 // API Endpoints
 app.use('/api/user', userRouter);
@@ -34,5 +32,14 @@ app.get('/', (req, res) => {
     res.send("API Working");
 });
 
-// Start the server
-app.listen(port, () => console.log('Server started on PORT : ' + port));
+const startServer = async () => {
+    await connectDB();
+    app.listen(port, '0.0.0.0', () =>
+        console.log('Server started on PORT : ' + port)
+    );
+};
+
+startServer().catch((err) => {
+    console.error('Failed to start server:', err);
+    process.exit(1);
+});
