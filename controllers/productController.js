@@ -2,6 +2,18 @@ import { v2 as cloudinary } from 'cloudinary'
 import productModel from '../models/productModel.js'
 import userModel from '../models/userModel.js';
 
+const normalizeQuantityOptions = (options) =>
+    options.map((opt) => {
+        const normalized = {
+            label: opt.label,
+            price: Number(opt.price)
+        };
+        if (opt.originalPrice != null && opt.originalPrice !== '') {
+            normalized.originalPrice = Number(opt.originalPrice);
+        }
+        return normalized;
+    });
+
 // function for adding product
 const addProduct = async (req, res) => {
     try {
@@ -39,8 +51,12 @@ const addProduct = async (req, res) => {
             description,
             mainDescription,
             bestseller: bestseller === 'true',
+<<<<<<< HEAD
             quantityOptions: parsedQuantityOptions,
             itemCount: itemCount !== undefined && itemCount !== '' ? Number(itemCount) : 0,
+=======
+            quantityOptions: normalizeQuantityOptions(parsedQuantityOptions),
+>>>>>>> e06ee98633a0c8fd808febf3c194fae20726b5e1
             image: imagesUrl,
             date: Date.now()
         };
@@ -86,7 +102,7 @@ const updateProduct = async (req, res) => {
         product.description = description || product.description;
         product.mainDescription = mainDescription || product.mainDescription;
         product.bestseller = bestseller === 'true';
-        product.quantityOptions = parsedQuantityOptions;
+        product.quantityOptions = normalizeQuantityOptions(parsedQuantityOptions);
         if (itemCount !== undefined && itemCount !== '') {
             product.itemCount = Number(itemCount);
         }
