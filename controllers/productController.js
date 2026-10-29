@@ -51,12 +51,8 @@ const addProduct = async (req, res) => {
             description,
             mainDescription,
             bestseller: bestseller === 'true',
-<<<<<<< HEAD
-            quantityOptions: parsedQuantityOptions,
-            itemCount: itemCount !== undefined && itemCount !== '' ? Number(itemCount) : 0,
-=======
             quantityOptions: normalizeQuantityOptions(parsedQuantityOptions),
->>>>>>> e06ee98633a0c8fd808febf3c194fae20726b5e1
+            itemCount: itemCount !== undefined && itemCount !== '' ? Number(itemCount) : 0,
             image: imagesUrl,
             date: Date.now()
         };
