@@ -28,6 +28,11 @@ const productSchema = new mongoose.Schema({
       price: { type: Number, required: true }
     }
   ],
+  itemCount: {
+    type: Number,
+    min: 0,
+    default: 0
+  },
   date: {
     type: Number,
     default: Date.now // fallback to current timestamp
